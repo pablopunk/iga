@@ -15,8 +15,8 @@ Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweig
 - One command
 - _0 config ES6 modules_
 - Use the file system as router
-- Automatic code reloading
-- Typescript out of the box _available soon_
+- Automatic code reloading (_available soon_)
+- Typescript out of the box (_available soon_)
 
 ## Install
 
