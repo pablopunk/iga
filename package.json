@@ -62,6 +62,7 @@
     "test": "myass",
     "dev": "nodemon --watch src --exec \"npm run build\"",
     "build": "sucrase src -d ./dist --transforms imports",
-    "start": "sucrase-node src/index.js"
+    "start": "sucrase-node src/index.js",
+    "prepare": "npm run build"
   }
 }
