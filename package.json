@@ -1,7 +1,7 @@
 {
   "name": "iga",
   "description": "Quickly create an API with automatic routing",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Pablo Varela <pablovarela182@gmail.com>",
   "bugs": {
     "url": "https://github.com/pablopunk/iga/issues",
