@@ -81,6 +81,14 @@ As you might have noticed by the previous examples, `iga` convers your file syst
 
 By default, `iga` allows you to write your code in es6 modules syntax or even **typescript**, with 0 configurations, thanks to [sucrase](https://sucrase.io). For `.js` files it will allow you to write es6 modules, but you can also directly write typescript in `.ts` files.
 
+```ts
+import { ServerResponse, IncomingMessage } from 'http'
+
+export default function(req: IncomingMessage, res: ServerResponse) {
+  res.end('hello from typescript.ts')
+}
+```
+
 ## Programmatic usage
 
 `iga` exposes an API so it's easier to test and use as a library:
