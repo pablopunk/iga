@@ -13,10 +13,10 @@
 Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweight server using your file system as a router.
 
 - One command
-- _0 config ES6 modules_
-- Use the file system as router
+- 0 config ES6 modules
+- Typescript out of the box
+- Use the file system as the router
 - Automatic code reloading (_available soon_)
-- Typescript out of the box (_available soon_)
 
 ## Install
 

@@ -25,7 +25,7 @@ export default async function({
     try {
       const endpointCode = getEndpointCode(endpoint)
       const endpointCodeTransformed = sucrase.transform(endpointCode, {
-        transforms: ['imports']
+        transforms: ['imports', 'typescript']
       }).code
       const endpointHandler = requireString(endpointCodeTransformed)
       if (typeof endpointHandler === 'function') {
@@ -54,20 +54,30 @@ function getEndpointCode(file) {
 }
 
 function getEndpointFile(root, paths) {
-  const fileName = `${paths[paths.length - 1]}.js`
-  const filePath = paths
-    .slice(paths.length - 2, paths.length - 1)
-    .concat(fileName)
-  const pathWithoutIndex = path.join(root, 'routes', ...filePath)
+  const extensions = ['js', 'ts']
+  for (let extension of extensions) {
+    const fileName = `${paths[paths.length - 1]}.${extension}`
+    console.log(fileName)
 
-  if (pathExists.sync(pathWithoutIndex)) {
-    return pathWithoutIndex
-  }
+    const filePath = paths
+      .slice(paths.length - 2, paths.length - 1)
+      .concat(fileName)
+    const pathWithoutIndex = path.join(root, 'routes', ...filePath)
 
-  const pathWithIndex = path.join(root, 'routes', ...paths, 'index.js')
+    if (pathExists.sync(pathWithoutIndex)) {
+      return pathWithoutIndex
+    }
 
-  if (pathExists.sync(pathWithIndex)) {
-    return pathWithIndex
+    const pathWithIndex = path.join(
+      root,
+      'routes',
+      ...paths,
+      `index.${extension}`
+    )
+
+    if (pathExists.sync(pathWithIndex)) {
+      return pathWithIndex
+    }
   }
 
   return null

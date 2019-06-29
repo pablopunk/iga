@@ -41,3 +41,12 @@ test('Supports nested folders with index.js support', async t => {
   server.close()
   t.is(data, 'hello from bar/index.js')
 })
+
+test('Supports typescript', async t => {
+  const port = await getPort()
+  const server = await m({ root: rootFolder, port, silent: true })
+  const res = await unfetch(`http://localhost:${port}/typescript`)
+  const data = await res.text()
+  server.close()
+  t.is(data, 'hello from typescript.ts')
+})
