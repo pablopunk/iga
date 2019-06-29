@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <i>Zero config typescript/es6 api with the filesystem as the router</i>
+  <i>Zero config typescript/es6 server with the filesystem as the router</i>
 </p>
 
 Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweight server using your file system as a router.
@@ -79,7 +79,7 @@ As you might have noticed by the previous examples, `iga` convers your file syst
 
 ## ES6 / Typescript
 
-By default, `iga` allows you to write your API in es6 modules syntax or even **typescript**, with 0 configurations, thanks to [sucrase](https://sucrase.io). For `.js` files it will allow you to write es6 modules, but you can also directly write typescript in `.ts` files.
+By default, `iga` allows you to write your code in es6 modules syntax or even **typescript**, with 0 configurations, thanks to [sucrase](https://sucrase.io). For `.js` files it will allow you to write es6 modules, but you can also directly write typescript in `.ts` files.
 
 ## Programmatic usage
 
@@ -88,7 +88,7 @@ By default, `iga` allows you to write your API in es6 modules syntax or even **t
 ```js
 const iga = require('iga')
 
-iga({ root: '/path/to/api/folder', port: 3000 })
+iga({ root: '/path/to/project/folder', port: 3000 })
 ```
 
 ### Options
@@ -101,7 +101,7 @@ Default: `process.cwd()`
 
 #### `port: number?`
 
-> Port that will be used to expose the API
+> Port that will be used to expose the server
 
 Default: `3000`
 

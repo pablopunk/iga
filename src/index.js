@@ -43,7 +43,7 @@ export default async function({
 
   server.listen(port)
   if (!silent) {
-    console.log('`apii` running at', port)
+    console.log('`iga` running at', port)
   }
 
   return server

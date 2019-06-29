@@ -1,6 +1,6 @@
 {
   "name": "iga",
-  "description": "Quickly create an API with automatic routing",
+  "description": "Zero config typescript/es6 server with the filesystem as the router",
   "version": "0.0.4",
   "author": "Pablo Varela <pablovarela182@gmail.com>",
   "bugs": {
@@ -29,6 +29,7 @@
   "homepage": "https://github.com/pablopunk/iga",
   "keywords": [
     "api",
+    "server",
     "automatic",
     "routing",
     "routes",
@@ -40,6 +41,9 @@
     "nextjs",
     "folder",
     "files",
+    "typescript",
+    "expose",
+    "port",
     "router"
   ],
   "license": "MIT",
