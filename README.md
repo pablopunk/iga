@@ -1,16 +1,16 @@
-# apii
+# iga
 
 <p align="center">
-  <a href="https://travis-ci.org/pablopunk/apii"><img src="https://img.shields.io/travis/pablopunk/apii.svg" /></a>
+  <a href="https://travis-ci.org/pablopunk/iga"><img src="https://img.shields.io/travis/pablopunk/iga.svg" /></a>
   <a href="https://github.com/pablopunk/miny"><img src="https://img.shields.io/badge/made_with-miny-1eced8.svg" /></a>
-  <a href="https://www.npmjs.com/package/apii"><img src="https://img.shields.io/npm/dt/apii.svg" /></a>
+  <a href="https://www.npmjs.com/package/iga"><img src="https://img.shields.io/npm/dt/iga.svg" /></a>
 </p>
 
 <p align="center">
   <i>Quickly create an API with automatic routing</i>
 </p>
 
-Inspired by [NextJS](https://github.com/zeit/next.js), `apii` exposes a lightweight server using your file system as a router.
+Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweight server using your file system as a router.
 
 - One command
 - _0 config ES6 modules_
@@ -21,7 +21,7 @@ Inspired by [NextJS](https://github.com/zeit/next.js), `apii` exposes a lightwei
 ## Install
 
 ```sh
-npm install apii
+npm install iga
 ```
 
 ## Usage
@@ -31,8 +31,8 @@ In your `package.json`:
 ```json
 {
   "scripts": {
-    "dev": "apii",
-    "start": "apii start"
+    "dev": "iga",
+    "start": "iga start"
   }
 }
 ```
@@ -42,11 +42,11 @@ Then create a `routes` folder with an `index.js`. Each route should export a fun
 ```js
 // routes/index.js
 export default async (request, response) => {
-  res.end('Hello from apii!')
+  res.end('Hello from iga!')
 }
 ```
 
-If you run `npm start` and you visit http://localhost:3000 you will see `Hello from apii!`.
+If you run `npm start` and you visit http://localhost:3000 you will see `Hello from iga!`.
 
 ### Routes
 
@@ -70,7 +70,7 @@ If you don't want to restart the server everytime you make changes, use `npm run
 
 #### FS to route
 
-As you might have noticed by the previous examples, `apii` convers your file system into routes as follows:
+As you might have noticed by the previous examples, `iga` convers your file system into routes as follows:
 
 - `routes/index.js`: `/`
 - `routes/foo.js`: `/foo`
@@ -78,16 +78,16 @@ As you might have noticed by the previous examples, `apii` convers your file sys
 
 ## ES6
 
-By default, `apii` allows you to write your API in es6 modules syntax, with 0 configurations, thanks to [sucrase](https://sucrase.io). I might extend this to use typescript out of the box too.
+By default, `iga` allows you to write your API in es6 modules syntax, with 0 configurations, thanks to [sucrase](https://sucrase.io). I might extend this to use typescript out of the box too.
 
 ## Programmatic usage
 
-`apii` exposes an API so it's easier to test and use as a library:
+`iga` exposes an API so it's easier to test and use as a library:
 
 ```js
-const apii = require('apii')
+const iga = require('iga')
 
-apii({ root: '/path/to/api/folder', port: 3000 })
+iga({ root: '/path/to/api/folder', port: 3000 })
 ```
 
 ### Options
