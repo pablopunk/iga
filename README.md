@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <i>Quickly create an API with automatic routing</i>
+  <i>Zero config typescript/es6 api with the filesystem as the router</i>
 </p>
 
 Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweight server using your file system as a router.
@@ -75,10 +75,11 @@ As you might have noticed by the previous examples, `iga` convers your file syst
 - `routes/index.js`: `/`
 - `routes/foo.js`: `/foo`
 - `routes/foo/bar.js`: `/foo/bar`
+- `routes/also-typescript.ts`: `/also-typescript`
 
-## ES6
+## ES6 / Typescript
 
-By default, `iga` allows you to write your API in es6 modules syntax, with 0 configurations, thanks to [sucrase](https://sucrase.io). I might extend this to use typescript out of the box too.
+By default, `iga` allows you to write your API in es6 modules syntax or even **typescript**, with 0 configurations, thanks to [sucrase](https://sucrase.io). For `.js` files it will allow you to write es6 modules, but you can also directly write typescript in `.ts` files.
 
 ## Programmatic usage
 
