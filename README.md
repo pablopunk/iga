@@ -104,6 +104,12 @@ Default: `process.cwd()`
 
 Default: `3000`
 
+#### `silent: boolean?`
+
+> If `true` it won't console.log anything
+
+Default: `false`
+
 ## License
 
 MIT

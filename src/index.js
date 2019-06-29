@@ -5,7 +5,11 @@ import requireString from 'require-from-string'
 import * as sucrase from 'sucrase'
 import pathExists from 'path-exists'
 
-export default async function({ root = process.cwd(), port = 3000 } = {}) {
+export default async function({
+  root = process.cwd(),
+  port = 3000,
+  silent = false
+} = {}) {
   const server = new http.Server((req, res) => {
     const paths = req.url
       .split('?')[0]
@@ -38,7 +42,9 @@ export default async function({ root = process.cwd(), port = 3000 } = {}) {
   })
 
   server.listen(port)
-  console.log('`apii` running at', port)
+  if (!silent) {
+    console.log('`apii` running at', port)
+  }
 
   return server
 }
