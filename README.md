@@ -37,7 +37,7 @@ In your `package.json`:
 }
 ```
 
-Then create a `routes` folder with an `index.js`. Each route should export a function with the standard NodeJS `request` and `response` objects:
+Then create a `routes` folder with an `index.js`. Each route should export a function with the **standard NodeJS `request` and `response` objects**:
 
 ```js
 // routes/index.js
