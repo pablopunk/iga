@@ -91,7 +91,7 @@ export default function(req: IncomingMessage, res: ServerResponse) {
 
 If you want to, your exported function can be an `async` function so you can use `await` inside it to manage promises.
 
-## CLI
+## CLI
 
 ### Commands
 
