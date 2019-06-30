@@ -16,7 +16,7 @@ Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweig
 - 0 config ES6 modules
 - Typescript out of the box
 - Use the file system as the router
-- Automatic code reloading (_available soon_)
+- Automatic code reloading
 
 ## Install
 
@@ -66,8 +66,6 @@ Now if you run `npm start` again and visit http://localhost:3000/random-fruit yo
 
 If you don't want to restart the server everytime you make changes, use `npm run dev` to watch and reload the code whenever there are changed files.
 
-> NOTE: `dev` feature is not available yet, if you use it, it will works as `npm start`. WIP
-
 #### FS to route
 
 As you might have noticed by the previous examples, `iga` convers your file system into routes as follows:
@@ -92,6 +90,26 @@ export default function(req: IncomingMessage, res: ServerResponse) {
 ## async/await
 
 If you want to, your exported function can be an `async` function so you can use `await` inside it to manage promises.
+
+## CLI
+
+### Commands
+
+> `iga`
+
+Without any arguments, `iga` will build your project everytime there's a change in your `routes` folder, so you can focus on coding.
+
+> `iga start`
+
+It will start the server without rebuilding. This should be used in production.
+
+### Options
+
+> `-p | --port XXXX`
+
+_Optional_. Start the server on port `XXXX`. Defaults to 3000.
+
+####
 
 ## Programmatic usage
 

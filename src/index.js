@@ -4,6 +4,7 @@ import http from 'http'
 import requireString from 'require-from-string'
 import * as sucrase from 'sucrase'
 import pathExists from 'path-exists'
+import pkg from '../package.json'
 
 export default async function({
   root = process.cwd(),
@@ -42,8 +43,9 @@ export default async function({
   })
 
   server.listen(port)
+
   if (!silent) {
-    console.log('`iga` running at', port)
+    console.log(`${pkg.name} running at`, port)
   }
 
   return server
