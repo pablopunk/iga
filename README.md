@@ -89,6 +89,10 @@ export default function(req: IncomingMessage, res: ServerResponse) {
 }
 ```
 
+## async/await
+
+If you want to, your exported function can be an `async` function so you can use `await` inside it to manage promises.
+
 ## Programmatic usage
 
 `iga` exposes an API so it's easier to test and use as a library:
