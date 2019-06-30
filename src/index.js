@@ -59,8 +59,6 @@ function getEndpointFile(root, paths) {
   const extensions = ['js', 'ts']
   for (let extension of extensions) {
     const fileName = `${paths[paths.length - 1]}.${extension}`
-    console.log(fileName)
-
     const filePath = paths
       .slice(paths.length - 2, paths.length - 1)
       .concat(fileName)
