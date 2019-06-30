@@ -38,7 +38,15 @@ export default async function({
       throw new Error(`Endpoint ${endpoint} does not export a function`)
     } catch (err) {
       res.statusCode = 500
-      return res.end(err.message)
+
+      // Respond with error if not in production
+      if (process.env.NODE_ENV !== 'production') {
+        return res.end(err.message)
+      }
+
+      // Log error in production
+      console.error(err.message)
+      return res.end('500')
     }
   })
 
