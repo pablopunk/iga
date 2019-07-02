@@ -10,6 +10,10 @@
   <i>Zero config typescript/es6 server with the filesystem as the router</i>
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/pablopunk/art/master/iga/iga.svg?sanitize=true" alt="logo">
+</p>
+
 Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweight server using your file system as a router.
 
 - One command
