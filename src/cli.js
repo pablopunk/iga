@@ -2,16 +2,22 @@
 import path from 'path'
 import pathExists from 'path-exists'
 import mri from 'mri'
+import pkg from '../package.json'
 import exposeServer from '..'
+
+const args = mri(process.argv.slice(2))
+const commands = args._
+
+if (args.v || args.version) {
+  console.log(`Version ${pkg.version}`)
+  process.exit(0)
+}
 
 const requiredFolderExists = pathExists.sync(path.join(process.cwd(), 'routes'))
 if (!requiredFolderExists) {
   console.error('Folder `routes` does not exist in current directory')
   process.exit(1)
 }
-
-const args = mri(process.argv.slice(2))
-const commands = args._
 
 let command
 
