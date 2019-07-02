@@ -64,7 +64,7 @@
     "url": "https://github.com/pablopunk/iga"
   },
   "scripts": {
-    "test": "myass",
+    "test": "npm run build && myass",
     "dev": "nodemon --watch src --exec \"npm run build\"",
     "build": "sucrase src -d ./dist --transforms imports",
     "start": "sucrase-node src/index.js",
