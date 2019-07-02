@@ -5,17 +5,10 @@ import { parse } from 'url'
 import requireString from 'require-from-string'
 import * as sucrase from 'sucrase'
 import pathExists from 'path-exists'
+import cache from 'memory-cache'
 import pkg from '../package.json'
 
-let handlerCache = {}
-
-function getFromCache(url) {
-  return handlerCache[url] || null
-}
-
-function setInCache(url, handler) {
-  handlerCache[url] = handler
-}
+const CACHE_LIFE = 60 * 1000
 
 function getHandlerDinamically(endpoint) {
   let endpointHandler
@@ -40,6 +33,14 @@ export default async function({
   useCache = true
 } = {}) {
   const server = new http.Server(async (req, res) => {
+    if (useCache) {
+      const cachedBody = cache.get(req.url)
+      if (cachedBody) {
+        res.end(cachedBody)
+        return
+      }
+    }
+
     const paths = req.url
       .split('?')[0]
       .split('/')
@@ -54,22 +55,10 @@ export default async function({
     req.query = parse(req.url, true).query
 
     try {
-      let endpointHandler
-
-      if (useCache) {
-        const handlerFromCache = getFromCache(req.url)
-        if (handlerFromCache) {
-          endpointHandler = handlerFromCache
-        }
-      }
-
-      if (!endpointHandler) {
-        endpointHandler = getHandlerDinamically(endpoint)
-        setInCache(req.url, endpointHandler)
-      }
+      const endpointHandler = getHandlerDinamically(endpoint)
 
       let handlerResult = endpointHandler(req, res)
-      if (res.headersSent) {
+      if (res.finished) {
         return // headers were sent inside endpointHandler
       }
 
@@ -80,8 +69,11 @@ export default async function({
       switch (typeof handlerResult) {
         case 'object':
           res.setHeader('Content-Type', 'application/json')
-          return res.end(JSON.stringify(handlerResult))
+          const body = JSON.stringify(handlerResult)
+          cache.put(req.url, body, CACHE_LIFE)
+          return res.end(body)
         case 'string':
+          cache.put(req.url, handlerResult, CACHE_LIFE)
           return res.end(handlerResult)
         case 'number':
           res.statusCode = handlerResult
