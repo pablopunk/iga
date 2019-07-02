@@ -3,7 +3,6 @@ import path from 'path'
 import pathExists from 'path-exists'
 import mri from 'mri'
 import exposeServer from '..'
-import nodemon from 'nodemon'
 
 const requiredFolderExists = pathExists.sync(path.join(process.cwd(), 'routes'))
 if (!requiredFolderExists) {
@@ -29,21 +28,7 @@ switch (command) {
     exposeServer({ port })
     break
   case 'dev':
-    nodemon({
-      watch: path.join(process.cwd(), 'routes'),
-      ext: 'js ts json',
-      exec: 'iga start'
-    })
-      .on('restart', files => {
-        console.log(
-          '[Restarting] - Modified',
-          files.map(f => path.basename(f)).join(', ')
-        )
-      })
-      .on('quit', () => {
-        console.log('[Exit]')
-        process.exit(0)
-      })
+    exposeServer({ port, useCache: false })
     break
   default:
     console.log('Unknown command', command)

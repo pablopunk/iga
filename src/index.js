@@ -6,10 +6,21 @@ import * as sucrase from 'sucrase'
 import pathExists from 'path-exists'
 import pkg from '../package.json'
 
+let handlerCache = {}
+
+function getFromCache(url) {
+  return handlerCache[url] || null
+}
+
+function setInCache(url, handler) {
+  handlerCache[url] = handler
+}
+
 export default async function({
   root = process.cwd(),
   port = 3000,
-  silent = false
+  silent = false,
+  useCache = true
 } = {}) {
   const server = new http.Server((req, res) => {
     const paths = req.url
@@ -24,14 +35,22 @@ export default async function({
     }
 
     try {
+      if (useCache) {
+        const handlerFromCache = getFromCache(req.url)
+        if (handlerFromCache) {
+          return handlerFromCache(req, res)
+        }
+      }
       const endpointCode = getEndpointCode(endpoint)
       const endpointCodeTransformed = sucrase.transform(endpointCode, {
         transforms: ['imports', 'typescript']
       }).code
       const endpointHandler = requireString(endpointCodeTransformed)
       if (typeof endpointHandler === 'function') {
+        useCache && setInCache(req.url, endpointHandler)
         return endpointHandler(req, res)
       } else if (typeof endpointHandler.default === 'function') {
+        useCache && setInCache(req.url, endpointHandler.default)
         return endpointHandler.default(req, res)
       }
 
