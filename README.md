@@ -64,7 +64,7 @@ export default async (request, response) => {
 
 Now if you run `npm start` again and visit http://localhost:3000/random-fruit you will get any of the fruits we declared in the file.
 
-If you don't want to restart the server everytime you make changes, use `npm run dev` to watch and reload the code whenever there are changed files.
+If you don't want to restart the server everytime you make changes, use `npm run dev` to disable cache and see the latest changes to your code.
 
 #### FS to route
 
@@ -123,23 +123,31 @@ iga({ root: '/path/to/project/folder', port: 3000 })
 
 ### Options
 
-#### `root: string?`
+#### `root?: string`
 
 > Path to the project that contains a 'routes' folder
 
 Default: `process.cwd()`
 
-#### `port: number?`
+#### `port?: number`
 
 > Port that will be used to expose the server
 
 Default: `3000`
 
-#### `silent: boolean?`
+#### `silent?: boolean`
 
 > If `true` it won't console.log anything
 
 Default: `false`
+
+#### `useCache?: boolean`
+
+> If `false` everytime you change your code you will
+> be able to see the new version on the server
+> This is what `iga` command uses with no arguments
+
+Default: `true`
 
 ## License
 
