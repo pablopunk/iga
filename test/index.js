@@ -1,7 +1,7 @@
 const test = require('myass')
 const path = require('path')
 const { default: m } = require('..')
-const unfetch = require('isomorphic-unfetch')
+const fetch = require('node-fetch')
 const getPort = require('get-port')
 
 const root = path.join(__dirname, 'example')
@@ -10,7 +10,7 @@ function genericTest(endpoint, responseText) {
   return async t => {
     const port = await getPort()
     const server = await m({ root, port, silent: true })
-    const res = await unfetch(`http://localhost:${port}${endpoint}`)
+    const res = await fetch(`http://localhost:${port}${endpoint}`)
     const data = await res.text()
     server.close()
     t.is(data, responseText)
@@ -21,7 +21,7 @@ function genericStatusCodeTest(endpoint, expectedCode) {
   return async t => {
     const port = await getPort()
     const server = await m({ root, port, silent: true })
-    const res = await unfetch(`http://localhost:${port}${endpoint}`)
+    const res = await fetch(`http://localhost:${port}${endpoint}`)
     const code = res.status
     server.close()
     t.is(code, expectedCode)
