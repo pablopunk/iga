@@ -41,13 +41,11 @@ In your `package.json`:
 }
 ```
 
-Then create a `routes` folder with an `index.js`. Each route should export a function with the **standard NodeJS `request` and `response` objects**:
+Then create a `routes` folder with an `index.js`. Each route should export a function with the **standard NodeJS `request` and `response` objects** with some [helpers](#helpers).
 
 ```js
 // routes/index.js
-export default async (request, response) => {
-  res.end('Hello from iga!')
-}
+export default () => 'Hello from iga!'
 ```
 
 If you run `npm start` and you visit http://localhost:3000 you will see `Hello from iga!`.
@@ -58,11 +56,11 @@ Now let's create another endpoint. Create a file `routes/random-fruit.js`:
 
 ```js
 // routes/random-fruit.js
-export default async (request, response) => {
+export default () => {
   const fruits = ['apple', 'orange', 'pear']
   const random = Math.floor(Math.random() * 3)
 
-  res.end(fruits[random])
+  return fruits[random]
 }
 ```
 
@@ -70,7 +68,47 @@ Now if you run `npm start` again and visit http://localhost:3000/random-fruit yo
 
 If you don't want to restart the server everytime you make changes, use `npm run dev` to disable cache and see the latest changes to your code.
 
-#### FS to route
+#### Response / Request
+
+`iga` catches the return value of your function and makes an http response with it, so you can do things like:
+
+- `return 'some text'`: Response will be plain text
+- `return { foo: bar }`: Response will be JSON
+- `return 403`: Response will send a 403 status code
+
+If you still want to do something manually, you can use both `request` and `response` objects, like:
+
+```js
+export default (req, res) => {
+  res.end(`Hello from ${req.url}`)
+}
+```
+
+In this case the return value will be ignored, because http headers have already been sent with `res.end`.
+
+#### Helpers
+
+> `request.query`
+
+Contains the result of `require('url').parse(req.url, true).query`, so you can code faster:
+
+```js
+// routes/find-user.js
+export default req => {
+  if (!req.query.userId) {
+    return 403 // bad request
+  }
+
+  const user = getUserFromDatabase({ id: req.query.userId })
+  if (!user) {
+    return 404 // not found
+  }
+
+  return { results: [user] }
+}
+```
+
+#### Filesystem as the router
 
 As you might have noticed by the previous examples, `iga` convers your file system into routes as follows:
 
@@ -81,7 +119,7 @@ As you might have noticed by the previous examples, `iga` convers your file syst
 
 ## ES6 / Typescript
 
-By default, `iga` allows you to write your code in es6 modules syntax or even **typescript**, with 0 configurations, thanks to [sucrase](https://sucrase.io). For `.js` files it will allow you to write es6 modules, but you can also directly write typescript in `.ts` files.
+By default, `iga` allows you to write your code in es5 `module.exports`, es6 `export default`or even **typescript**, with 0 configurations, thanks to [sucrase](https://sucrase.io). For `.js` files it will allow you to write es6 modules, but you can also directly write typescript in `.ts` files.
 
 ```ts
 import { ServerResponse, IncomingMessage } from 'http'

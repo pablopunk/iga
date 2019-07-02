@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import http from 'http'
+import { parse } from 'url'
 import requireString from 'require-from-string'
 import * as sucrase from 'sucrase'
 import pathExists from 'path-exists'
@@ -16,13 +17,29 @@ function setInCache(url, handler) {
   handlerCache[url] = handler
 }
 
+function getHandlerDinamically(endpoint) {
+  let endpointHandler
+  const endpointCode = getEndpointCode(endpoint)
+  const endpointCodeTransformed = sucrase.transform(endpointCode, {
+    transforms: ['imports', 'typescript']
+  }).code
+  endpointHandler = requireString(endpointCodeTransformed)
+  if (typeof endpointHandler === 'function') {
+    return endpointHandler
+  } else if (typeof endpointHandler.default === 'function') {
+    return endpointHandler.default
+  }
+
+  throw new Error(`Endpoint ${endpoint} does not export a function`)
+}
+
 export default async function({
   root = process.cwd(),
   port = 3000,
   silent = false,
   useCache = true
 } = {}) {
-  const server = new http.Server((req, res) => {
+  const server = new http.Server(async (req, res) => {
     const paths = req.url
       .split('?')[0]
       .split('/')
@@ -34,27 +51,48 @@ export default async function({
       return res.end('404')
     }
 
+    req.query = parse(req.url, true).query
+
     try {
+      let endpointHandler
+
       if (useCache) {
         const handlerFromCache = getFromCache(req.url)
         if (handlerFromCache) {
-          return handlerFromCache(req, res)
+          endpointHandler = handlerFromCache
         }
       }
-      const endpointCode = getEndpointCode(endpoint)
-      const endpointCodeTransformed = sucrase.transform(endpointCode, {
-        transforms: ['imports', 'typescript']
-      }).code
-      const endpointHandler = requireString(endpointCodeTransformed)
-      if (typeof endpointHandler === 'function') {
-        useCache && setInCache(req.url, endpointHandler)
-        return endpointHandler(req, res)
-      } else if (typeof endpointHandler.default === 'function') {
-        useCache && setInCache(req.url, endpointHandler.default)
-        return endpointHandler.default(req, res)
+
+      if (!endpointHandler) {
+        endpointHandler = getHandlerDinamically(endpoint)
+        setInCache(req.url, endpointHandler)
       }
 
-      throw new Error(`Endpoint ${endpoint} does not export a function`)
+      let handlerResult = endpointHandler(req, res)
+      if (res.headersSent) {
+        return // headers were sent inside endpointHandler
+      }
+
+      if (typeof handlerResult.then === 'function') {
+        handlerResult = await handlerResult
+      }
+
+      switch (typeof handlerResult) {
+        case 'object':
+          res.setHeader('Content-Type', 'application/json')
+          return res.end(JSON.stringify(handlerResult))
+        case 'string':
+          return res.end(handlerResult)
+        case 'number':
+          res.statusCode = handlerResult
+          return res.end()
+        default:
+          console.error(
+            `Unkown return type '${typeof handlerResult}' from endpoint ${endpoint}`
+          )
+          res.statusCode = 500
+          return res.end()
+      }
     } catch (err) {
       res.statusCode = 500
 
@@ -65,7 +103,7 @@ export default async function({
 
       // Log error in production
       console.error(err.message)
-      return res.end('500')
+      return res.end()
     }
   })
 

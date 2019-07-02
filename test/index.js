@@ -6,13 +6,18 @@ const getPort = require('get-port')
 
 const root = path.join(__dirname, 'example')
 
+async function getResponseFrom(endpoint) {
+  const port = await getPort()
+  const server = await m({ root, port, silent: true })
+  const res = await fetch(`http://localhost:${port}${endpoint}`)
+  server.close()
+  return res
+}
+
 function genericTest(endpoint, responseText) {
   return async t => {
-    const port = await getPort()
-    const server = await m({ root, port, silent: true })
-    const res = await fetch(`http://localhost:${port}${endpoint}`)
+    const res = await getResponseFrom(endpoint)
     const data = await res.text()
-    server.close()
     t.is(data, responseText)
   }
 }
@@ -22,8 +27,8 @@ function genericStatusCodeTest(endpoint, expectedCode) {
     const port = await getPort()
     const server = await m({ root, port, silent: true })
     const res = await fetch(`http://localhost:${port}${endpoint}`)
-    const code = res.status
     server.close()
+    const code = res.status
     t.is(code, expectedCode)
   }
 }
@@ -49,3 +54,25 @@ test(
   'Returns 404 for empty endpoint',
   genericStatusCodeTest('/idontexist', 404)
 )
+
+test(
+  'Returns custom status code as number',
+  genericStatusCodeTest('/code', 203)
+)
+
+test('Supports async functions', genericTest('/async', 'hello from async.ts'))
+
+test('Supports strings', genericTest('/string', 'just a string'))
+
+test(
+  'Ignores result when headers have been sent',
+  genericTest('/headers-sent', 'first')
+)
+
+test('Supports json and sends correct data type', async t => {
+  const res = await getResponseFrom('/json')
+  const json = await res.json()
+  t.is(json, { custom: 'foo' })
+})
+
+test('Sends parsed query.params', genericTest('/query?id=bar', 'bar'))
