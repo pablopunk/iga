@@ -120,10 +120,12 @@ _Optional_. Start the server on port `XXXX`. Defaults to 3000.
 `iga` exposes an API so it's easier to test and use as a library:
 
 ```js
-const iga = require('iga')
+import iga from 'iga'
 
 iga({ root: '/path/to/project/folder', port: 3000 })
 ```
+
+The return value is a native NodeJS `http.Server` instance.
 
 ### Options
 
