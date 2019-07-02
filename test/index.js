@@ -4,12 +4,12 @@ const { default: m } = require('..')
 const unfetch = require('isomorphic-unfetch')
 const getPort = require('get-port')
 
-const rootFolder = path.join(__dirname, 'example')
+const root = path.join(__dirname, 'example')
 
 function genericTest(endpoint, responseText) {
   return async t => {
     const port = await getPort()
-    const server = await m({ root: rootFolder, port, silent: true })
+    const server = await m({ root, port, silent: true })
     const res = await unfetch(`http://localhost:${port}${endpoint}`)
     const data = await res.text()
     server.close()
@@ -20,7 +20,7 @@ function genericTest(endpoint, responseText) {
 function genericStatusCodeTest(endpoint, expectedCode) {
   return async t => {
     const port = await getPort()
-    const server = await m({ root: rootFolder, port, silent: true })
+    const server = await m({ root, port, silent: true })
     const res = await unfetch(`http://localhost:${port}${endpoint}`)
     const code = res.status
     server.close()
