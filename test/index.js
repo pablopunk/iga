@@ -1,35 +1,38 @@
-const test = require('myass')
+const http = require('http')
 const path = require('path')
-const { default: m } = require('..')
+const test = require('myass')
+const { getMiddleWare } = require('..')
 const fetch = require('node-fetch')
 const getPort = require('get-port')
 
 const root = path.join(__dirname, 'example')
 
-async function getResponseFrom(endpoint) {
+async function getResponseFrom(endpoint, cb) {
   const port = await getPort()
-  const server = await m({ root, port, silent: true })
-  const res = await fetch(`http://localhost:${port}${endpoint}`)
-  server.close()
-  return res
+  const server = new http.Server(getMiddleWare({ root }))
+  server.listen(port, () => {
+    fetch(`http://localhost:${port}${endpoint}`).then(res => {
+      server.close()
+      cb(res)
+    })
+  })
 }
 
 function genericTest(endpoint, responseText) {
   return async t => {
-    const res = await getResponseFrom(endpoint)
-    const data = await res.text()
-    t.is(data, responseText)
+    getResponseFrom(endpoint, async res => {
+      const data = await res.text()
+      t.is(data, responseText)
+    })
   }
 }
 
 function genericStatusCodeTest(endpoint, expectedCode) {
   return async t => {
-    const port = await getPort()
-    const server = await m({ root, port, silent: true })
-    const res = await fetch(`http://localhost:${port}${endpoint}`)
-    server.close()
-    const code = res.status
-    t.is(code, expectedCode)
+    getResponseFrom(endpoint, res => {
+      const code = res.status
+      t.is(code, expectedCode)
+    })
   }
 }
 
@@ -69,10 +72,11 @@ test(
   genericTest('/headers-sent', 'first')
 )
 
-test('Supports json and sends correct data type', async t => {
-  const res = await getResponseFrom('/json')
-  const json = await res.json()
-  t.is(json, { custom: 'foo' })
-})
-
 test('Sends parsed query.params', genericTest('/query?id=bar', 'bar'))
+
+test('Supports json and sends correct data type', async t => {
+  getResponseFrom('/json', async res => {
+    const json = await res.json()
+    t.is(json, { custom: 'foo' })
+  })
+})

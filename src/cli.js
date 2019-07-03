@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import path from 'path'
+import http from 'http'
 import pathExists from 'path-exists'
 import mri from 'mri'
 import pkg from '../package.json'
-import exposeServer from '..'
+import { getMiddleWare } from '..'
 
 const args = mri(process.argv.slice(2))
 const commands = args._
@@ -29,14 +30,20 @@ if (!commands || commands.length < 1) {
 
 const port = args.p || 3000
 
+let middlewareOptions = { root: process.cwd() }
+
 switch (command) {
   case 'start':
-    exposeServer({ port })
+    middlewareOptions.useCache = true
     break
   case 'dev':
-    exposeServer({ port, useCache: false })
+    middlewareOptions.useCache = false
     break
   default:
     console.log('Unknown command', command)
-    break
+    process.exit(1)
 }
+
+const server = new http.Server(getMiddleWare(middlewareOptions))
+server.listen(port)
+console.log(`${pkg.name} ready on port`, port)

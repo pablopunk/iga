@@ -160,11 +160,24 @@ _Optional_. Start the server on port `XXXX`. Defaults to 3000.
 
 ```js
 import iga from 'iga'
+import http from 'http'
 
-iga({ root: '/path/to/project/folder', port: 3000 })
+const server = new http.Server(iga)
 ```
 
-The return value is a native NodeJS `http.Server` instance.
+If you want, there are some options you can customize:
+
+```js
+import { getMiddleWare } from 'iga'
+import http from 'http'
+
+const server = new http.Server(
+  getMiddleWare({
+    root: '/path/to/my/project',
+    useCache: false
+  })
+)
+```
 
 ### Options
 
@@ -173,18 +186,6 @@ The return value is a native NodeJS `http.Server` instance.
 > Path to the project that contains a 'routes' folder
 
 Default: `process.cwd()`
-
-#### `port?: number`
-
-> Port that will be used to expose the server
-
-Default: `3000`
-
-#### `silent?: boolean`
-
-> If `true` it won't console.log anything
-
-Default: `false`
 
 #### `useCache?: boolean`
 
