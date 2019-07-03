@@ -173,7 +173,7 @@ import http from 'http'
 
 const server = new http.Server(
   getMiddleWare({
-    root: '/path/to/my/project',
+    root: process.cwd(),
     useCache: false
   })
 )
@@ -185,7 +185,7 @@ const server = new http.Server(
 
 > Path to the project that contains a 'routes' folder
 
-Default: `process.cwd()`
+Default: `__dirname`
 
 #### `useCache?: boolean`
 
