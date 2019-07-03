@@ -63,7 +63,7 @@ function getEndpointFile(root, paths) {
   return null
 }
 
-const middleware = ({ useCache = true, root = __dirname } = {}) => async (
+const middleware = ({ useCache = true, root = process.cwd() } = {}) => async (
   req,
   res
 ) => {
