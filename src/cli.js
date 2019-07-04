@@ -30,7 +30,7 @@ if (!commands || commands.length < 1) {
 
 const port = args.p || 3000
 
-let middlewareOptions = { root: process.cwd() }
+let middlewareOptions = {}
 
 switch (command) {
   case 'start':

@@ -5,6 +5,8 @@ import requireString from 'require-from-string'
 import * as sucrase from 'sucrase'
 import pathExists from 'path-exists'
 
+const defaultRoutesPath = path.join(process.cwd(), 'routes')
+
 let handlerCache = {}
 
 function getFromCache(url) {
@@ -35,25 +37,20 @@ function getEndpointCode(file) {
   return fs.readFileSync(file, 'utf-8')
 }
 
-function getEndpointFile(root, paths) {
+function getEndpointFile(routesPath, paths) {
   const extensions = ['js', 'ts']
   for (let extension of extensions) {
     const fileName = `${paths[paths.length - 1]}.${extension}`
     const filePath = paths
       .slice(paths.length - 2, paths.length - 1)
       .concat(fileName)
-    const pathWithoutIndex = path.join(root, 'routes', ...filePath)
+    const pathWithoutIndex = path.join(routesPath, ...filePath)
 
     if (pathExists.sync(pathWithoutIndex)) {
       return pathWithoutIndex
     }
 
-    const pathWithIndex = path.join(
-      root,
-      'routes',
-      ...paths,
-      `index.${extension}`
-    )
+    const pathWithIndex = path.join(routesPath, ...paths, `index.${extension}`)
 
     if (pathExists.sync(pathWithIndex)) {
       return pathWithIndex
@@ -63,10 +60,10 @@ function getEndpointFile(root, paths) {
   return null
 }
 
-const middleware = ({ useCache = true, root = process.cwd() } = {}) => async (
-  req,
-  res
-) => {
+const middleware = ({
+  useCache = true,
+  routes = defaultRoutesPath
+} = {}) => async (req, res) => {
   if (useCache) {
     res.setHeader('Cache-Control', `s-maxage=60`) // 1 minute cache
   }
@@ -75,7 +72,7 @@ const middleware = ({ useCache = true, root = process.cwd() } = {}) => async (
     .split('?')[0]
     .split('/')
     .filter(Boolean)
-  const endpoint = getEndpointFile(root, paths)
+  const endpoint = getEndpointFile(routes, paths)
 
   if (endpoint === null) {
     res.statusCode = 404
