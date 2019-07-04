@@ -64,10 +64,6 @@ const middleware = ({
   useCache = true,
   routes = defaultRoutesPath
 } = {}) => async (req, res) => {
-  if (useCache) {
-    res.setHeader('Cache-Control', `s-maxage=60`) // 1 minute cache
-  }
-
   const paths = req.url
     .split('?')[0]
     .split('/')
