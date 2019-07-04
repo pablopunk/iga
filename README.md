@@ -195,6 +195,10 @@ Default: `path.join(process.cwd(), 'routes')`
 
 Default: `true`
 
+## Deploy
+
+Any provider that can run NodeJS will work. If you want to use [now.sh](https://now.sh), I made a [simple example](https://github.com/pablopunk/iga-example) that works. It uses `deploy.js` as the lambda in now.sh.
+
 ## License
 
 MIT
