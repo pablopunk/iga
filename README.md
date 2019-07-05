@@ -23,6 +23,23 @@ Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweig
 - Use the file system as the router
 - Automatic code reloading
 
+<hr/>
+
+- [Install](#install)
+- [Usage](#usage)
+  - [Routes](#routes)
+  - [Response/Request](#response/request)
+  - [Helpers](#helpers)
+- [ES6/Typescript](#es6/typescript)
+  - [async/await](#async/await)
+- [CLI](#cli)
+- [Programmatic Usage](#programmatic+usage)
+- [Deploy](#deploy)
+- [License](#license)
+- [Author](#author)
+
+<hr/>
+
 ## Install
 
 ```sh
@@ -130,7 +147,7 @@ export default function(req: IncomingMessage, res: ServerResponse) {
 }
 ```
 
-## async/await
+### async/await
 
 If you want to, your exported function can be an `async` function so you can use `await` inside it to manage promises.
 
