@@ -35,7 +35,7 @@ Inspired by [NextJS](https://github.com/zeit/next.js), `iga` exposes a lightweig
 - [CLI](#cli)
   - [Commands](#commands)
   - [Options](#options)
-- [Programmatic Usage](#programmatic+usage)
+- [Programmatic Usage](#programmatic-usage)
   - [Options](#options-1)
 - [Deploy](#deploy)
 - [License](#license)
