@@ -2,3 +2,4 @@ src
 test
 .travis.yml
 .editorconfig
+index.html
