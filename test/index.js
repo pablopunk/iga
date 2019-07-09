@@ -7,36 +7,18 @@ const getPort = require('get-port')
 
 const routes = path.join(__dirname, 'example', 'routes')
 
-const waitForLocalhost = ({ port }) => {
+function startServer(port) {
+  const server = new http.Server(getMiddleWare({ routes, useCache: false }))
   return new Promise(resolve => {
-    const retry = () => setTimeout(main, 200)
-
-    const main = () => {
-      const request = http.request({ method: 'HEAD', port }, response => {
-        const { statusCode } = response
-        switch (statusCode) {
-          case 404:
-          case 200:
-            return resolve()
-          default:
-            retry()
-            break
-        }
-      })
-
-      request.on('error', retry)
-      request.end()
-    }
-
-    main()
+    server.listen(port, () => {
+      resolve(server)
+    })
   })
 }
 
 async function getResponseFrom(endpoint) {
   const port = await getPort()
-  const server = new http.Server(getMiddleWare({ routes, useCache: false }))
-  server.listen(port, () => {})
-  await waitForLocalhost({ port })
+  const server = await startServer(port)
   const res = await fetch(`http://localhost:${port}${endpoint}`)
   server.close()
   return res
